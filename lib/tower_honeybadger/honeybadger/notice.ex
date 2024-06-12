@@ -1,5 +1,6 @@
 defmodule TowerHoneybadger.Honeybadger.Notice do
-  def from_exception(exception, stacktrace) when is_exception(exception) and is_list(stacktrace) do
+  def from_exception(exception, stacktrace)
+      when is_exception(exception) and is_list(stacktrace) do
     %{
       "error" => %{
         "class" => inspect(exception.__struct__),
