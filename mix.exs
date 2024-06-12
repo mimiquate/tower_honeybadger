@@ -5,7 +5,7 @@ defmodule TowerHoneybadger.MixProject do
     [
       app: :tower_honeybadger,
       version: "0.1.0",
-      elixir: "~> 1.17",
+      elixir: "~> 1.16",
       start_permanent: Mix.env() == :prod,
       deps: deps()
     ]
