@@ -1,6 +1,9 @@
 defmodule TowerHoneybadger.Honeybadger.Notice do
-  def from_exception(exception, stacktrace)
+  def from_exception(exception, stacktrace, options \\ [])
       when is_exception(exception) and is_list(stacktrace) do
+
+    plug_conn = Keyword.get(options, :plug_conn)
+
     %{
       "error" => %{
         "class" => inspect(exception.__struct__),
@@ -8,6 +11,7 @@ defmodule TowerHoneybadger.Honeybadger.Notice do
         "backtrace" => backtrace(stacktrace)
       }
     }
+    |> maybe_put_request_data(plug_conn)
   end
 
   defp backtrace(stacktrace) do
@@ -31,5 +35,26 @@ defmodule TowerHoneybadger.Honeybadger.Notice do
       end
     end)
     |> Enum.reverse()
+  end
+
+  defp maybe_put_request_data(notice, %Plug.Conn{} = conn) do
+    notice
+    |> Map.put("request", request_data(conn))
+  end
+
+  defp request_data(%Plug.Conn{} = conn) do
+    conn =
+      conn
+      |> Plug.Conn.fetch_cookies()
+      |> Plug.Conn.fetch_query_params()
+
+    %{
+      "url" => "#{conn.scheme}://#{conn.host}:#{conn.port}#{conn.request_path}",
+      "params" =>
+        case conn.params do
+          %Plug.Conn.Unfetched{aspect: :params} -> "unfetched"
+          other -> other
+        end
+    }
   end
 end

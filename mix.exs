@@ -14,7 +14,7 @@ defmodule TowerHoneybadger.MixProject do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger]
+      extra_applications: [:logger, :public_key]
     ]
   end
 
@@ -22,7 +22,8 @@ defmodule TowerHoneybadger.MixProject do
   defp deps do
     [
       {:jason, "~> 1.4"},
-      {:tower, github: "mimiquate/tower"}
+      {:tower, github: "mimiquate/tower"},
+      {:plug, "~> 1.16"}
     ]
   end
 end
