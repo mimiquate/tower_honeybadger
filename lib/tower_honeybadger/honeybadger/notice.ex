@@ -1,7 +1,6 @@
 defmodule TowerHoneybadger.Honeybadger.Notice do
   def from_exception(exception, stacktrace, options \\ [])
       when is_exception(exception) and is_list(stacktrace) do
-
     plug_conn = Keyword.get(options, :plug_conn)
 
     %{
