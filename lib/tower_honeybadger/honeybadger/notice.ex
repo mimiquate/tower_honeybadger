@@ -36,7 +36,6 @@ defmodule TowerHoneybadger.Honeybadger.Notice do
         backtrace_entry
       end
     end)
-    |> Enum.reverse()
   end
 
   defp maybe_put_request_data(notice, %Plug.Conn{} = conn) do
