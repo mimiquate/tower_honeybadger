@@ -8,6 +8,9 @@ defmodule TowerHoneybadger.Honeybadger.Notice do
         "class" => inspect(exception.__struct__),
         "message" => Exception.message(exception),
         "backtrace" => backtrace(stacktrace)
+      },
+      "server" => %{
+        "environment_name" => Application.fetch_env!(:tower_honeybadger, :environment)
       }
     }
     |> maybe_put_request_data(plug_conn)
