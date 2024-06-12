@@ -1,0 +1,3 @@
+%{
+  "tower": {:git, "https://github.com/mimiquate/tower.git", "140a358d321ede1f3f2225341430143c2ec47d47", []},
+}
