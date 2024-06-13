@@ -43,6 +43,10 @@ defmodule TowerHoneybadger.Honeybadger.Notice do
     |> Map.put("request", request_data(conn))
   end
 
+  defp maybe_put_request_data(notice, _) do
+    notice
+  end
+
   defp request_data(%Plug.Conn{} = conn) do
     conn =
       conn
@@ -60,6 +64,6 @@ defmodule TowerHoneybadger.Honeybadger.Notice do
   end
 
   defp environment do
-    Application.fetch_env!(:tower_honeybadge, :environment)
+    Application.fetch_env!(:tower_honeybadger, :environment)
   end
 end
