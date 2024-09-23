@@ -4,7 +4,7 @@ defmodule TowerHoneybadger.Reporter do
   @impl true
   def report_event(%Tower.Event{kind: :message}) do
     if enabled?() do
-      IO.puts("TowerHoneybadger DOES NOT support reporting messages, ignoring...")
+      IO.puts("Honeybadger DOES NOT support reporting messages, ignoring...")
     else
       IO.puts("TowerHoneybadger NOT enabled, ignoring...")
     end
