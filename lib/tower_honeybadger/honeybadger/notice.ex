@@ -1,8 +1,10 @@
 defmodule TowerHoneybadger.Honeybadger.Notice do
-  def from_exception(exception, stacktrace, options \\ [])
-      when is_exception(exception) and is_list(stacktrace) do
-    plug_conn = Keyword.get(options, :plug_conn)
-
+  def from_tower_event(%Tower.Event{
+        kind: :error,
+        reason: exception,
+        stacktrace: stacktrace,
+        plug_conn: plug_conn
+      }) do
     %{
       "error" => %{
         "class" => inspect(exception.__struct__),
