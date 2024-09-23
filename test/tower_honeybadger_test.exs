@@ -20,7 +20,9 @@ defmodule TowerHoneybadgerTest do
 
     on_exit(fn ->
       Tower.detach()
-      # Application.put_env(:tower_sentry, :dsn, nil)
+      Application.put_env(:tower_honeybadger, :api_key, nil)
+      Application.put_env(:tower_honeybadger, :environment, nil)
+      Application.put_env(:tower, :reporters, [])
     end)
 
     {:ok, bypass: bypass}
@@ -52,7 +54,7 @@ defmodule TowerHoneybadgerTest do
             "file" => "test/tower_honeybadger_test.exs",
             "method" =>
               ~s(anonymous fn/0 in TowerHoneybadgerTest."test reports arithmetic error"/1),
-            "number" => 68
+            "number" => 70
           } = List.first(backtrace_entries)
         )
 
@@ -96,7 +98,7 @@ defmodule TowerHoneybadgerTest do
           %{
             "file" => "test/tower_honeybadger_test.exs",
             "method" => ~s(anonymous fn/0 in TowerHoneybadgerTest."test reports throw"/1),
-            "number" => 112
+            "number" => 114
           } = List.first(backtrace_entries)
         )
 
@@ -140,7 +142,7 @@ defmodule TowerHoneybadgerTest do
           %{
             "file" => "test/tower_honeybadger_test.exs",
             "method" => ~s(anonymous fn/0 in TowerHoneybadgerTest."test reports abnormal exit"/1),
-            "number" => 156
+            "number" => 158
           } = List.first(backtrace_entries)
         )
 
