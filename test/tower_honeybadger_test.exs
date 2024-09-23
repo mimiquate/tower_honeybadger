@@ -38,7 +38,7 @@ defmodule TowerHoneybadgerTest do
               "error" => %{
                 "class" => "ArithmeticError",
                 "message" => "bad argument in arithmetic expression",
-                "backtrace" => backtrace
+                "backtrace" => backtrace_entries
               },
               "server" => %{
                 "environment_name" => "test"
@@ -49,11 +49,11 @@ defmodule TowerHoneybadgerTest do
 
         assert(
           %{
+            "file" => "test/tower_honeybadger_test.exs",
             "method" =>
               ~s(anonymous fn/0 in TowerHoneybadgerTest."test reports arithmetic error"/1),
-            "file" => "test/tower_honeybadger_test.exs",
             "number" => 68
-          } = List.first(backtrace)
+          } = List.first(backtrace_entries)
         )
 
         done.()
@@ -66,6 +66,50 @@ defmodule TowerHoneybadgerTest do
       capture_log(fn ->
         in_unlinked_process(fn ->
           1 / 0
+        end)
+      end)
+    end)
+  end
+
+  test "reports throw", %{bypass: bypass} do
+    waiting_for(fn done ->
+      Bypass.expect_once(bypass, "POST", "/notices", fn conn ->
+        {:ok, body, conn} = Plug.Conn.read_body(conn)
+
+        assert(
+          {
+            :ok,
+            %{
+              "error" => %{
+                "class" => "(throw)",
+                "message" => "something",
+                "backtrace" => backtrace_entries
+              },
+              "server" => %{
+                "environment_name" => "test"
+              }
+            }
+          } = Jason.decode(body)
+        )
+
+        assert(
+          %{
+            "file" => "test/tower_honeybadger_test.exs",
+            "method" => ~s(anonymous fn/0 in TowerHoneybadgerTest."test reports throw"/1),
+            "number" => 112
+          } = List.first(backtrace_entries)
+        )
+
+        done.()
+
+        conn
+        |> Plug.Conn.put_resp_content_type("application/json")
+        |> Plug.Conn.resp(200, Jason.encode!(%{"id" => "123"}))
+      end)
+
+      capture_log(fn ->
+        in_unlinked_process(fn ->
+          throw("something")
         end)
       end)
     end)

@@ -5,10 +5,28 @@ defmodule TowerHoneybadger.Honeybadger.Notice do
         stacktrace: stacktrace,
         plug_conn: plug_conn
       }) do
+    error_notice(
+      inspect(exception.__struct__),
+      Exception.message(exception),
+      stacktrace,
+      plug_conn
+    )
+  end
+
+  def from_tower_event(%Tower.Event{
+        kind: :throw,
+        reason: reason,
+        stacktrace: stacktrace,
+        plug_conn: plug_conn
+      }) do
+    error_notice("(throw)", reason, stacktrace, plug_conn)
+  end
+
+  defp error_notice(class, message, stacktrace, plug_conn) do
     %{
       "error" => %{
-        "class" => inspect(exception.__struct__),
-        "message" => Exception.message(exception),
+        "class" => class,
+        "message" => message,
         "backtrace" => backtrace(stacktrace)
       },
       "server" => %{
