@@ -47,24 +47,34 @@ defmodule TowerHoneybadger.Honeybadger.Notice do
 
   defp backtrace(stacktrace) do
     stacktrace
-    |> Enum.map(fn {m, f, a, location} ->
-      backtrace_entry = %{
-        "method" => Exception.format_mfa(m, f, a)
-      }
+    |> Enum.map(&backtrace_entry/1)
+  end
 
-      backtrace_entry =
-        if location[:file] do
-          Map.put(backtrace_entry, "file", to_string(location[:file]))
-        else
-          backtrace_entry
-        end
+  defp backtrace_entry({m, f, a, location}) do
+    backtrace_entry = %{
+      "method" => backtrace_entry_method(m, f, a)
+    }
 
-      if location[:line] do
-        Map.put(backtrace_entry, "number", location[:line])
+    backtrace_entry =
+      if location[:file] do
+        Map.put(backtrace_entry, "file", to_string(location[:file]))
       else
         backtrace_entry
       end
-    end)
+
+    if location[:line] do
+      Map.put(backtrace_entry, "number", location[:line])
+    else
+      backtrace_entry
+    end
+  end
+
+  defp backtrace_entry_method(m, f, arity) when is_integer(arity) do
+    Exception.format_mfa(m, f, arity)
+  end
+
+  defp backtrace_entry_method(m, f, args) when is_list(args) do
+    Exception.format_mfa(m, f, length(args))
   end
 
   defp maybe_put_request_data(notice, %Plug.Conn{} = conn) do
