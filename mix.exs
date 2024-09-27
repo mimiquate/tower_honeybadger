@@ -35,9 +35,10 @@ defmodule TowerHoneybadger.MixProject do
     [
       {:jason, "~> 1.4"},
       {:tower, "~> 0.5.0"},
-      {:plug, "~> 1.16"},
+      {:plug, "~> 1.14"},
 
       # Dev
+      {:blend, "~> 0.4.1", only: :dev},
       {:ex_doc, "~> 0.34.2", only: :dev, runtime: false},
 
       # Test
