@@ -50,7 +50,7 @@ config(
 )
 ```
 
-And finally configure `:honeybadger` dsn.
+And finally configure `:tower_honeybadger`, with at least the API key.
 
 ```elixir
 # config/runtime.exs
