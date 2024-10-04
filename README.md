@@ -22,20 +22,7 @@ end
 
 ## Usage
 
-First, attach `Tower` to automatically capture errors.
-
-```elixir
-# lib/<your_app>/application.ex
-
-defmodule YourApp.Application do
-  def start(_type, _args) do
-    Tower.attach()
-
-    # rest of your code
-  end
-```
-
-Then tell `Tower` to inform `TowerHoneybadger` reporter about them.
+Tell `Tower` to inform `TowerHoneybadger` reporter about errors.
 
 ```elixir
 # config/config.exs
@@ -50,7 +37,7 @@ config(
 )
 ```
 
-And finally configure `:tower_honeybadger`, with at least the API key.
+And configure `:tower_honeybadger`, with at least the API key.
 
 ```elixir
 # config/runtime.exs
