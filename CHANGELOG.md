@@ -30,7 +30,7 @@ automatically.
 
 - Updates elixir compatibility from `~> 1.16` to `~> 1.15`, i.e. also support elixir 1.15.
 
-## [0.1.0] - 2024-09-23
+## 0.1.0 - 2024-09-23
 
 Initial release
 
