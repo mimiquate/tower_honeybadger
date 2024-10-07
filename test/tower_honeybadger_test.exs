@@ -15,7 +15,7 @@ defmodule TowerHoneybadgerTest do
 
     Application.put_env(:tower_honeybadger, :api_key, "test-api-key")
     Application.put_env(:tower_honeybadger, :environment, :test)
-    Application.put_env(:tower, :reporters, [TowerHoneybadger.Reporter])
+    Application.put_env(:tower, :reporters, [TowerHoneybadger])
 
     on_exit(fn ->
       Application.put_env(:tower_honeybadger, :api_key, nil)

@@ -1,18 +1,16 @@
 defmodule TowerHoneybadger do
   @moduledoc """
-  Documentation for `TowerHoneybadger`.
+  A Tower reporter for Honeybadger
+
+  ## Example
+
+      config :tower, :reporters, [TowerHoneybadger]
   """
 
-  @doc """
-  Hello world.
+  @behaviour Tower.Reporter
 
-  ## Examples
-
-      iex> TowerHoneybadger.hello()
-      :world
-
-  """
-  def hello do
-    :world
+  @impl true
+  def report_event(event) do
+    TowerHoneybadger.Reporter.report_event(event)
   end
 end
