@@ -64,11 +64,11 @@ try do
   # possibly crashing code
 rescue
   exception ->
-    Tower.handle_exception(exception, __STACKTRACE__)
+    Tower.report_exception(exception, __STACKTRACE__)
 end
 ```
 
-More details on https://hexdocs.pm/tower/Tower.html#module-manual-handling.
+More details on https://hexdocs.pm/tower/Tower.html#module-manual-reporting.
 
 ## License
 
