@@ -126,7 +126,7 @@ defmodule TowerHoneybadgerTest do
             %{
               "error" => %{
                 "class" => "(exit)",
-                "message" => "abnormal",
+                "message" => ":abnormal",
                 "backtrace" => backtrace_entries
               },
               "server" => %{
@@ -154,6 +154,51 @@ defmodule TowerHoneybadgerTest do
       capture_log(fn ->
         in_unlinked_process(fn ->
           exit(:abnormal)
+        end)
+      end)
+    end)
+  end
+
+  test "reports :gen_server bad exit", %{bypass: bypass} do
+    waiting_for(fn done ->
+      Bypass.expect_once(bypass, "POST", "/notices", fn conn ->
+        {:ok, body, conn} = Plug.Conn.read_body(conn)
+
+        assert(
+          {
+            :ok,
+            %{
+              "error" => %{
+                "class" => "(exit)",
+                "message" => "bad return value: \"bad value\"",
+                "backtrace" => backtrace_entries
+              },
+              "server" => %{
+                "environment_name" => "test"
+              }
+            }
+          } = Jason.decode(body)
+        )
+
+        assert(
+          %{
+            "file" => "test/tower_honeybadger_test.exs",
+            "method" =>
+              ~s(anonymous fn/0 in TowerHoneybadgerTest."test reports :gen_server bad exit"/1),
+            "number" => 201
+          } = List.first(backtrace_entries)
+        )
+
+        done.()
+
+        conn
+        |> Plug.Conn.put_resp_content_type("application/json")
+        |> Plug.Conn.resp(200, Jason.encode!(%{"id" => "123"}))
+      end)
+
+      capture_log(fn ->
+        in_unlinked_process(fn ->
+          exit({:bad_return_value, "bad value"})
         end)
       end)
     end)

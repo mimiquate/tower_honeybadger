@@ -28,7 +28,7 @@ defmodule TowerHoneybadger.Honeybadger.Notice do
         stacktrace: stacktrace,
         plug_conn: plug_conn
       }) do
-    error_notice("(exit)", reason, stacktrace, plug_conn)
+    error_notice("(exit)", Exception.format_exit(reason), stacktrace, plug_conn)
   end
 
   defp error_notice(class, message, stacktrace, plug_conn) do
