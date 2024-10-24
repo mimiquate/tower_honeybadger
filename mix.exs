@@ -3,7 +3,7 @@ defmodule TowerHoneybadger.MixProject do
 
   @description "Error tracking and reporting to Honeybadger"
   @source_url "https://github.com/mimiquate/tower_honeybadger"
-  @version "0.2.0"
+  @version "0.2.1"
 
   def project do
     [
