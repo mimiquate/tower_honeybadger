@@ -35,7 +35,7 @@ defmodule TowerHoneybadger.MixProject do
   defp deps do
     [
       {:jason, "~> 1.4"},
-      {:tower, "~> 0.6.0"},
+      {:tower, "~> 0.7.1"},
       {:plug, "~> 1.14"},
 
       # Dev

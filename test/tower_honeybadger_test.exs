@@ -218,17 +218,23 @@ defmodule TowerHoneybadgerTest do
             :ok,
             %{
               "error" => %{
-                # An exit instead of a throw because Bandit doesn't handle throw's
-                # for the moment. See: https://github.com/mtrudel/bandit/pull/410.
-                "class" => "(exit)",
-                "message" => "bad return value: \"from inside a plug\"",
-                # No stacktrace
-                "backtrace" => []
+                "class" => "(throw)",
+                "message" => "\"from inside a plug\"",
+                "backtrace" => [
+                  %{
+                    "file" => "test/support/error_test_plug.ex",
+                    "method" => "anonymous fn/2 in TowerHoneybadger.ErrorTestPlug.do_match/4",
+                    "number" => 14
+                  }
+                  | _
+                ]
               },
               "server" => %{
                 "environment_name" => "test"
+              },
+              "request" => %{
+                "url" => ^url
               }
-              # No request data
             }
           } = Jason.decode(body)
         )
@@ -245,8 +251,7 @@ defmodule TowerHoneybadgerTest do
           {Bandit, plug: TowerHoneybadger.ErrorTestPlug, scheme: :http, port: plug_port}
         )
 
-        {:error, _response} =
-          :httpc.request(:get, {url, [{~c"user-agent", "httpc client"}]}, [], [])
+        {:ok, _response} = :httpc.request(:get, {url, [{~c"user-agent", "httpc client"}]}, [], [])
       end)
     end)
   end
