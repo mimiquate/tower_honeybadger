@@ -82,7 +82,7 @@ defmodule TowerHoneybadgerTest do
             %{
               "error" => %{
                 "class" => "(throw)",
-                "message" => "something",
+                "message" => "\"something\"",
                 "backtrace" => backtrace_entries
               },
               "server" => %{

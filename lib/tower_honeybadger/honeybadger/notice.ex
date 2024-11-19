@@ -15,11 +15,11 @@ defmodule TowerHoneybadger.Honeybadger.Notice do
 
   def from_tower_event(%Tower.Event{
         kind: :throw,
-        reason: reason,
+        reason: value,
         stacktrace: stacktrace,
         plug_conn: plug_conn
       }) do
-    error_notice("(throw)", reason, stacktrace, plug_conn)
+    error_notice("(throw)", inspect(value), stacktrace, plug_conn)
   end
 
   def from_tower_event(%Tower.Event{
