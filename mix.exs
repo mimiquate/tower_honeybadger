@@ -40,7 +40,7 @@ defmodule TowerHoneybadger.MixProject do
 
       # Dev
       {:blend, "~> 0.4.1", only: :dev},
-      {:ex_doc, "~> 0.35.1", only: :dev, runtime: false},
+      {:ex_doc, "~> 0.36.1", only: :dev, runtime: false},
 
       # Test
       {:bandit, "~> 1.5", only: :test},
