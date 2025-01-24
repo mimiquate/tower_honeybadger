@@ -35,7 +35,7 @@ defmodule TowerHoneybadger.MixProject do
   defp deps do
     [
       {:jason, "~> 1.4"},
-      {:tower, "~> 0.7.1"},
+      {:tower, github: "mimiquate/tower", branch: "sync"},
       {:plug, "~> 1.14"},
 
       # Dev
