@@ -3,6 +3,7 @@ defmodule TowerHoneybadger.MixProject do
 
   @description "Error tracking and reporting to Honeybadger"
   @source_url "https://github.com/mimiquate/tower_honeybadger"
+  @changelog_url @source_url <> "/blob/-/CHANGELOG.md"
   @version "0.2.3"
 
   def project do
@@ -55,7 +56,8 @@ defmodule TowerHoneybadger.MixProject do
     [
       licenses: ["Apache-2.0"],
       links: %{
-        "GitHub" => @source_url
+        "GitHub" => @source_url,
+        "Changelog" => @changelog_url
       }
     ]
   end
@@ -63,7 +65,10 @@ defmodule TowerHoneybadger.MixProject do
   defp docs do
     [
       main: "readme",
-      extras: ["README.md"]
+      extras: [
+        "README.md": [title: "README"],
+        "CHANGELOG.md": [title: "Changelog"]
+      ]
     ]
   end
 
