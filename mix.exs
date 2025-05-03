@@ -47,7 +47,7 @@ defmodule TowerHoneybadger.MixProject do
 
       # Test
       {:bandit, "~> 1.5", only: :test},
-      {:bypass, github: "mimiquate/bypass", branch: "master", only: :test}
+      {:test_server, "~> 0.1.20", only: :test}
     ]
   end
 
