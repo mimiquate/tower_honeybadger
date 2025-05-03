@@ -44,7 +44,7 @@ defmodule TowerHoneybadgerTest do
                 "environment_name" => "test"
               }
             }
-          } = Jason.decode(body)
+          } = TowerHoneybadger.json_module().decode(body)
         )
 
         assert(
@@ -60,7 +60,7 @@ defmodule TowerHoneybadgerTest do
 
         conn
         |> Plug.Conn.put_resp_content_type("application/json")
-        |> Plug.Conn.resp(200, Jason.encode!(%{"id" => "123"}))
+        |> Plug.Conn.resp(200, TowerHoneybadger.json_module().encode!(%{"id" => "123"}))
       end)
 
       capture_log(fn ->
@@ -89,7 +89,7 @@ defmodule TowerHoneybadgerTest do
                 "environment_name" => "test"
               }
             }
-          } = Jason.decode(body)
+          } = TowerHoneybadger.json_module().decode(body)
         )
 
         assert(
@@ -104,7 +104,7 @@ defmodule TowerHoneybadgerTest do
 
         conn
         |> Plug.Conn.put_resp_content_type("application/json")
-        |> Plug.Conn.resp(200, Jason.encode!(%{"id" => "123"}))
+        |> Plug.Conn.resp(200, TowerHoneybadger.json_module().encode!(%{"id" => "123"}))
       end)
 
       capture_log(fn ->
@@ -133,7 +133,7 @@ defmodule TowerHoneybadgerTest do
                 "environment_name" => "test"
               }
             }
-          } = Jason.decode(body)
+          } = TowerHoneybadger.json_module().decode(body)
         )
 
         assert(
@@ -148,7 +148,7 @@ defmodule TowerHoneybadgerTest do
 
         conn
         |> Plug.Conn.put_resp_content_type("application/json")
-        |> Plug.Conn.resp(200, Jason.encode!(%{"id" => "123"}))
+        |> Plug.Conn.resp(200, TowerHoneybadger.json_module().encode!(%{"id" => "123"}))
       end)
 
       capture_log(fn ->
@@ -177,7 +177,7 @@ defmodule TowerHoneybadgerTest do
                 "environment_name" => "test"
               }
             }
-          } = Jason.decode(body)
+          } = TowerHoneybadger.json_module().decode(body)
         )
 
         assert(
@@ -193,7 +193,7 @@ defmodule TowerHoneybadgerTest do
 
         conn
         |> Plug.Conn.put_resp_content_type("application/json")
-        |> Plug.Conn.resp(200, Jason.encode!(%{"id" => "123"}))
+        |> Plug.Conn.resp(200, TowerHoneybadger.json_module().encode!(%{"id" => "123"}))
       end)
 
       capture_log(fn ->
@@ -236,14 +236,14 @@ defmodule TowerHoneybadgerTest do
                 "url" => ^url
               }
             }
-          } = Jason.decode(body)
+          } = TowerHoneybadger.json_module().decode(body)
         )
 
         done.()
 
         conn
         |> Plug.Conn.put_resp_content_type("application/json")
-        |> Plug.Conn.resp(200, Jason.encode!(%{"ok" => true}))
+        |> Plug.Conn.resp(200, TowerHoneybadger.json_module().encode!(%{"ok" => true}))
       end)
 
       capture_log(fn ->

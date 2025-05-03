@@ -12,7 +12,7 @@ defmodule TowerHoneybadger.Honeybadger.Client do
              ~c"#{base_url()}#{path}",
              [{@api_key_header, api_key()}],
              ~c"application/json",
-             Jason.encode!(payload)
+             TowerHoneybadger.json_module().encode!(payload)
            },
            [
              ssl: [

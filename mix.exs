@@ -34,9 +34,12 @@ defmodule TowerHoneybadger.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:jason, "~> 1.4"},
       {:tower, "~> 0.7.1"},
       {:plug, "~> 1.14"},
+
+      # Optional
+      # Only needed for Elixir < 1.18
+      {:jason, "~> 1.4", optional: true},
 
       # Dev
       {:blend, "~> 0.5.0", only: :dev},
