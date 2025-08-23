@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.4] - 2025-08-23
+
+### Added
+
+- Allow use with Tower v0.8.x
+
+### Changed
+
+- Changes `tower` dependency from `{:tower, "~> 0.7.1"}` to `{:tower, "~> 0.7.1 or ~> 0.8.0"}`.
+
 ## [0.2.3] - 2025-05-03
 
 ### Dependencies
@@ -56,6 +66,7 @@ automatically.
 
 Initial release
 
+[0.2.4]: https://github.com/mimiquate/tower_honeybadger/compare/v0.2.3...v0.2.4/
 [0.2.3]: https://github.com/mimiquate/tower_honeybadger/compare/v0.2.2...v0.2.3/
 [0.2.2]: https://github.com/mimiquate/tower_honeybadger/compare/v0.2.1...v0.2.2/
 [0.2.1]: https://github.com/mimiquate/tower_honeybadger/compare/v0.2.0...v0.2.1/
