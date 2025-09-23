@@ -46,7 +46,9 @@ if Code.ensure_loaded?(Igniter) and
       |> Tower.Igniter.reporters_list_append(TowerHoneybadger)
       |> Tower.Igniter.runtime_configure_reporter(
         :tower_honeybadger,
-        api_key: code_value(~s[System.get_env("HONEYBADGER_API_KEY")])
+        api_key: code_value(~s[System.get_env("HONEYBADGER_API_KEY")]),
+        environment_name:
+          code_value(~s[System.get_env("DEPLOYMENT_ENV", to_string(config_env()))])
       )
     end
 
