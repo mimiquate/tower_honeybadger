@@ -15,7 +15,7 @@ Package can be installed by adding `tower_honeybadger` to your list of dependenc
 ```elixir
 def deps do
   [
-    {:tower_honeybadger, "~> 0.2.4"}
+    {:tower_honeybadger, "~> 0.3.0"}
   ]
 end
 ```
