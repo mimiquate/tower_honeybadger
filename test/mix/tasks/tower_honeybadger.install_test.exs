@@ -17,7 +17,10 @@ if Code.ensure_loaded?(Tower.Igniter) do
         "config/runtime.exs",
         """
         import Config
-        config :tower_honeybadger, api_key: System.get_env("HONEYBADGER_API_KEY")
+
+        config :tower_honeybadger,
+          api_key: System.get_env("HONEYBADGER_API_KEY"),
+          environment_name: System.get_env("DEPLOYMENT_ENV", to_string(config_env()))
         """
       )
     end

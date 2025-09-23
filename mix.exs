@@ -28,7 +28,11 @@ defmodule TowerHoneybadger.MixProject do
   def application do
     [
       extra_applications: [:logger, :public_key],
-      env: [honeybadger_base_url: "https://api.honeybadger.io/v1", api_key: nil, environment: nil]
+      env: [
+        honeybadger_base_url: "https://api.honeybadger.io/v1",
+        api_key: nil,
+        environment_name: nil
+      ]
     ]
   end
 
