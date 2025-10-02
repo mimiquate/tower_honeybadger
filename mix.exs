@@ -4,7 +4,7 @@ defmodule TowerHoneybadger.MixProject do
   @description "Error tracking and reporting to Honeybadger"
   @source_url "https://github.com/mimiquate/tower_honeybadger"
   @changelog_url @source_url <> "/blob/-/CHANGELOG.md"
-  @version "0.2.4"
+  @version "0.3.0"
 
   def project do
     [
@@ -28,7 +28,11 @@ defmodule TowerHoneybadger.MixProject do
   def application do
     [
       extra_applications: [:logger, :public_key],
-      env: [honeybadger_base_url: "https://api.honeybadger.io/v1", api_key: nil, environment: nil]
+      env: [
+        honeybadger_base_url: "https://api.honeybadger.io/v1",
+        api_key: nil,
+        environment_name: nil
+      ]
     ]
   end
 
@@ -39,6 +43,7 @@ defmodule TowerHoneybadger.MixProject do
       {:plug, "~> 1.14"},
 
       # Optional
+      {:igniter, "~> 0.6", optional: true},
       # Only needed for Elixir < 1.18
       {:jason, "~> 1.4", optional: true},
 
