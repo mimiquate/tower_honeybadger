@@ -39,7 +39,7 @@ defmodule TowerHoneybadger.Honeybadger.Notice do
         "backtrace" => backtrace(stacktrace)
       },
       "server" => %{
-        "environment_name" => environment()
+        "environment_name" => environment_name()
       }
     }
     |> maybe_put_request_data(plug_conn)
@@ -102,7 +102,9 @@ defmodule TowerHoneybadger.Honeybadger.Notice do
     }
   end
 
-  defp environment do
-    Application.fetch_env!(:tower_honeybadger, :environment)
+  defp environment_name do
+    # Backwards-compatible with deprecated option name `environment`
+    Application.fetch_env!(:tower_honeybadger, :environment_name) ||
+      Application.get_env(:tower_honeybadger, :environment)
   end
 end

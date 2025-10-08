@@ -3,7 +3,8 @@ defmodule TowerHoneybadger.MixProject do
 
   @description "Error tracking and reporting to Honeybadger"
   @source_url "https://github.com/mimiquate/tower_honeybadger"
-  @version "0.2.2"
+  @changelog_url @source_url <> "/blob/-/CHANGELOG.md"
+  @version "0.3.0"
 
   def project do
     [
@@ -27,24 +28,32 @@ defmodule TowerHoneybadger.MixProject do
   def application do
     [
       extra_applications: [:logger, :public_key],
-      env: [honeybadger_base_url: "https://api.honeybadger.io/v1", api_key: nil, environment: nil]
+      env: [
+        honeybadger_base_url: "https://api.honeybadger.io/v1",
+        api_key: nil,
+        environment_name: nil
+      ]
     ]
   end
 
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:jason, "~> 1.4"},
-      {:tower, "~> 0.7.1"},
+      {:tower, "~> 0.7.1 or ~> 0.8.0"},
       {:plug, "~> 1.14"},
+
+      # Optional
+      {:igniter, "~> 0.6", optional: true},
+      # Only needed for Elixir < 1.18
+      {:jason, "~> 1.4", optional: true},
 
       # Dev
       {:blend, "~> 0.5.0", only: :dev},
-      {:ex_doc, "~> 0.37.1", only: :dev, runtime: false},
+      {:ex_doc, "~> 0.38.3", only: :dev, runtime: false},
 
       # Test
       {:bandit, "~> 1.5", only: :test},
-      {:bypass, github: "mimiquate/bypass", branch: "master", only: :test}
+      {:test_server, "~> 0.1.20", only: :test}
     ]
   end
 
@@ -52,7 +61,8 @@ defmodule TowerHoneybadger.MixProject do
     [
       licenses: ["Apache-2.0"],
       links: %{
-        "GitHub" => @source_url
+        "GitHub" => @source_url,
+        "Changelog" => @changelog_url
       }
     ]
   end
@@ -60,7 +70,10 @@ defmodule TowerHoneybadger.MixProject do
   defp docs do
     [
       main: "readme",
-      extras: ["README.md"]
+      extras: [
+        "README.md": [title: "README"],
+        "CHANGELOG.md": [title: "Changelog"]
+      ]
     ]
   end
 

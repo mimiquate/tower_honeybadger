@@ -5,63 +5,68 @@ defmodule TowerHoneybadgerTest do
   import ExUnit.CaptureLog, only: [capture_log: 1]
 
   setup do
-    bypass = Bypass.open()
+    {:ok, test_server} = TestServer.start()
 
     Application.put_env(
       :tower_honeybadger,
       :honeybadger_base_url,
-      "http://localhost:#{bypass.port}/"
+      TestServer.url(test_server)
     )
 
     Application.put_env(:tower_honeybadger, :api_key, "test-api-key")
-    Application.put_env(:tower_honeybadger, :environment, :test)
+    Application.put_env(:tower_honeybadger, :environment_name, :test)
     Application.put_env(:tower, :reporters, [TowerHoneybadger])
 
     on_exit(fn ->
       Application.put_env(:tower_honeybadger, :api_key, nil)
-      Application.put_env(:tower_honeybadger, :environment, nil)
+      Application.put_env(:tower_honeybadger, :environment_name, nil)
       Application.put_env(:tower, :reporters, [])
     end)
 
-    {:ok, bypass: bypass}
+    {:ok, test_server: test_server}
   end
 
-  test "reports arithmetic error", %{bypass: bypass} do
+  test "reports arithmetic error", %{test_server: test_server} do
     waiting_for(fn done ->
-      Bypass.expect_once(bypass, "POST", "/notices", fn conn ->
-        {:ok, body, conn} = Plug.Conn.read_body(conn)
+      TestServer.add(
+        test_server,
+        "/notices",
+        via: :post,
+        to: fn conn ->
+          {:ok, body, conn} = Plug.Conn.read_body(conn)
 
-        assert(
-          {
-            :ok,
-            %{
-              "error" => %{
-                "class" => "ArithmeticError",
-                "message" => "bad argument in arithmetic expression",
-                "backtrace" => backtrace_entries
-              },
-              "server" => %{
-                "environment_name" => "test"
+          assert(
+            {
+              :ok,
+              %{
+                "error" => %{
+                  "class" => "ArithmeticError",
+                  "message" => "bad argument in arithmetic expression",
+                  "backtrace" => backtrace_entries
+                },
+                "server" => %{
+                  "environment_name" => "test"
+                }
               }
-            }
-          } = Jason.decode(body)
-        )
+            } = TowerHoneybadger.json_module().decode(body)
+          )
 
-        assert(
-          %{
-            "file" => "test/tower_honeybadger_test.exs",
-            "method" =>
-              ~s(anonymous fn/0 in TowerHoneybadgerTest."test reports arithmetic error"/1),
-            "number" => 68
-          } = List.first(backtrace_entries)
-        )
+          assert(
+            %{
+              "file" => "test/tower_honeybadger_test.exs",
+              "method" =>
+                ~s(anonymous fn/0 in TowerHoneybadgerTest."test reports arithmetic error"/1),
+              "number" => 73
+            } = List.first(backtrace_entries)
+          )
 
-        done.()
+          done.()
 
-        conn
-        |> Plug.Conn.put_resp_content_type("application/json")
-        |> Plug.Conn.resp(200, Jason.encode!(%{"id" => "123"}))
-      end)
+          conn
+          |> Plug.Conn.put_resp_content_type("application/json")
+          |> Plug.Conn.resp(200, TowerHoneybadger.json_module().encode!(%{"id" => "123"}))
+        end
+      )
 
       capture_log(fn ->
         in_unlinked_process(fn ->
@@ -71,41 +76,46 @@ defmodule TowerHoneybadgerTest do
     end)
   end
 
-  test "reports throw", %{bypass: bypass} do
+  test "reports throw", %{test_server: test_server} do
     waiting_for(fn done ->
-      Bypass.expect_once(bypass, "POST", "/notices", fn conn ->
-        {:ok, body, conn} = Plug.Conn.read_body(conn)
+      TestServer.add(
+        test_server,
+        "/notices",
+        via: :post,
+        to: fn conn ->
+          {:ok, body, conn} = Plug.Conn.read_body(conn)
 
-        assert(
-          {
-            :ok,
-            %{
-              "error" => %{
-                "class" => "(throw)",
-                "message" => "\"something\"",
-                "backtrace" => backtrace_entries
-              },
-              "server" => %{
-                "environment_name" => "test"
+          assert(
+            {
+              :ok,
+              %{
+                "error" => %{
+                  "class" => "(throw)",
+                  "message" => "\"something\"",
+                  "backtrace" => backtrace_entries
+                },
+                "server" => %{
+                  "environment_name" => "test"
+                }
               }
-            }
-          } = Jason.decode(body)
-        )
+            } = TowerHoneybadger.json_module().decode(body)
+          )
 
-        assert(
-          %{
-            "file" => "test/tower_honeybadger_test.exs",
-            "method" => ~s(anonymous fn/0 in TowerHoneybadgerTest."test reports throw"/1),
-            "number" => 112
-          } = List.first(backtrace_entries)
-        )
+          assert(
+            %{
+              "file" => "test/tower_honeybadger_test.exs",
+              "method" => ~s(anonymous fn/0 in TowerHoneybadgerTest."test reports throw"/1),
+              "number" => 122
+            } = List.first(backtrace_entries)
+          )
 
-        done.()
+          done.()
 
-        conn
-        |> Plug.Conn.put_resp_content_type("application/json")
-        |> Plug.Conn.resp(200, Jason.encode!(%{"id" => "123"}))
-      end)
+          conn
+          |> Plug.Conn.put_resp_content_type("application/json")
+          |> Plug.Conn.resp(200, TowerHoneybadger.json_module().encode!(%{"id" => "123"}))
+        end
+      )
 
       capture_log(fn ->
         in_unlinked_process(fn ->
@@ -115,41 +125,47 @@ defmodule TowerHoneybadgerTest do
     end)
   end
 
-  test "reports abnormal exit", %{bypass: bypass} do
+  test "reports abnormal exit", %{test_server: test_server} do
     waiting_for(fn done ->
-      Bypass.expect_once(bypass, "POST", "/notices", fn conn ->
-        {:ok, body, conn} = Plug.Conn.read_body(conn)
+      TestServer.add(
+        test_server,
+        "/notices",
+        via: :post,
+        to: fn conn ->
+          {:ok, body, conn} = Plug.Conn.read_body(conn)
 
-        assert(
-          {
-            :ok,
-            %{
-              "error" => %{
-                "class" => "(exit)",
-                "message" => ":abnormal",
-                "backtrace" => backtrace_entries
-              },
-              "server" => %{
-                "environment_name" => "test"
+          assert(
+            {
+              :ok,
+              %{
+                "error" => %{
+                  "class" => "(exit)",
+                  "message" => ":abnormal",
+                  "backtrace" => backtrace_entries
+                },
+                "server" => %{
+                  "environment_name" => "test"
+                }
               }
-            }
-          } = Jason.decode(body)
-        )
+            } = TowerHoneybadger.json_module().decode(body)
+          )
 
-        assert(
-          %{
-            "file" => "test/tower_honeybadger_test.exs",
-            "method" => ~s(anonymous fn/0 in TowerHoneybadgerTest."test reports abnormal exit"/1),
-            "number" => 156
-          } = List.first(backtrace_entries)
-        )
+          assert(
+            %{
+              "file" => "test/tower_honeybadger_test.exs",
+              "method" =>
+                ~s(anonymous fn/0 in TowerHoneybadgerTest."test reports abnormal exit"/1),
+              "number" => 172
+            } = List.first(backtrace_entries)
+          )
 
-        done.()
+          done.()
 
-        conn
-        |> Plug.Conn.put_resp_content_type("application/json")
-        |> Plug.Conn.resp(200, Jason.encode!(%{"id" => "123"}))
-      end)
+          conn
+          |> Plug.Conn.put_resp_content_type("application/json")
+          |> Plug.Conn.resp(200, TowerHoneybadger.json_module().encode!(%{"id" => "123"}))
+        end
+      )
 
       capture_log(fn ->
         in_unlinked_process(fn ->
@@ -159,42 +175,47 @@ defmodule TowerHoneybadgerTest do
     end)
   end
 
-  test "reports :gen_server bad exit", %{bypass: bypass} do
+  test "reports :gen_server bad exit", %{test_server: test_server} do
     waiting_for(fn done ->
-      Bypass.expect_once(bypass, "POST", "/notices", fn conn ->
-        {:ok, body, conn} = Plug.Conn.read_body(conn)
+      TestServer.add(
+        test_server,
+        "/notices",
+        via: :post,
+        to: fn conn ->
+          {:ok, body, conn} = Plug.Conn.read_body(conn)
 
-        assert(
-          {
-            :ok,
-            %{
-              "error" => %{
-                "class" => "(exit)",
-                "message" => "bad return value: \"bad value\"",
-                "backtrace" => backtrace_entries
-              },
-              "server" => %{
-                "environment_name" => "test"
+          assert(
+            {
+              :ok,
+              %{
+                "error" => %{
+                  "class" => "(exit)",
+                  "message" => "bad return value: \"bad value\"",
+                  "backtrace" => backtrace_entries
+                },
+                "server" => %{
+                  "environment_name" => "test"
+                }
               }
-            }
-          } = Jason.decode(body)
-        )
+            } = TowerHoneybadger.json_module().decode(body)
+          )
 
-        assert(
-          %{
-            "file" => "test/tower_honeybadger_test.exs",
-            "method" =>
-              ~s(anonymous fn/0 in TowerHoneybadgerTest."test reports :gen_server bad exit"/1),
-            "number" => 201
-          } = List.first(backtrace_entries)
-        )
+          assert(
+            %{
+              "file" => "test/tower_honeybadger_test.exs",
+              "method" =>
+                ~s(anonymous fn/0 in TowerHoneybadgerTest."test reports :gen_server bad exit"/1),
+              "number" => 222
+            } = List.first(backtrace_entries)
+          )
 
-        done.()
+          done.()
 
-        conn
-        |> Plug.Conn.put_resp_content_type("application/json")
-        |> Plug.Conn.resp(200, Jason.encode!(%{"id" => "123"}))
-      end)
+          conn
+          |> Plug.Conn.put_resp_content_type("application/json")
+          |> Plug.Conn.resp(200, TowerHoneybadger.json_module().encode!(%{"id" => "123"}))
+        end
+      )
 
       capture_log(fn ->
         in_unlinked_process(fn ->
@@ -204,47 +225,52 @@ defmodule TowerHoneybadgerTest do
     end)
   end
 
-  test "reports throw with Bandit", %{bypass: bypass} do
+  test "reports throw with Bandit", %{test_server: test_server} do
     # An ephemeral port hopefully not being in the host running this code
     plug_port = 51111
     url = "http://127.0.0.1:#{plug_port}/uncaught-throw"
 
     waiting_for(fn done ->
-      Bypass.expect_once(bypass, "POST", "/notices", fn conn ->
-        {:ok, body, conn} = Plug.Conn.read_body(conn)
+      TestServer.add(
+        test_server,
+        "/notices",
+        via: :post,
+        to: fn conn ->
+          {:ok, body, conn} = Plug.Conn.read_body(conn)
 
-        assert(
-          {
-            :ok,
-            %{
-              "error" => %{
-                "class" => "(throw)",
-                "message" => "\"from inside a plug\"",
-                "backtrace" => [
-                  %{
-                    "file" => "test/support/error_test_plug.ex",
-                    "method" => "anonymous fn/2 in TowerHoneybadger.ErrorTestPlug.do_match/4",
-                    "number" => 14
-                  }
-                  | _
-                ]
-              },
-              "server" => %{
-                "environment_name" => "test"
-              },
-              "request" => %{
-                "url" => ^url
+          assert(
+            {
+              :ok,
+              %{
+                "error" => %{
+                  "class" => "(throw)",
+                  "message" => "\"from inside a plug\"",
+                  "backtrace" => [
+                    %{
+                      "file" => "test/support/error_test_plug.ex",
+                      "method" => "anonymous fn/2 in TowerHoneybadger.ErrorTestPlug.do_match/4",
+                      "number" => 14
+                    }
+                    | _
+                  ]
+                },
+                "server" => %{
+                  "environment_name" => "test"
+                },
+                "request" => %{
+                  "url" => ^url
+                }
               }
-            }
-          } = Jason.decode(body)
-        )
+            } = TowerHoneybadger.json_module().decode(body)
+          )
 
-        done.()
+          done.()
 
-        conn
-        |> Plug.Conn.put_resp_content_type("application/json")
-        |> Plug.Conn.resp(200, Jason.encode!(%{"ok" => true}))
-      end)
+          conn
+          |> Plug.Conn.put_resp_content_type("application/json")
+          |> Plug.Conn.resp(200, TowerHoneybadger.json_module().encode!(%{"ok" => true}))
+        end
+      )
 
       capture_log(fn ->
         start_supervised!(

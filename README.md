@@ -15,7 +15,7 @@ Package can be installed by adding `tower_honeybadger` to your list of dependenc
 ```elixir
 def deps do
   [
-    {:tower_honeybadger, "~> 0.2.2"}
+    {:tower_honeybadger, "~> 0.3.0"}
   ]
 end
 ```
@@ -43,7 +43,9 @@ And configure `:tower_honeybadger`, with at least the API key.
 # config/runtime.exs
 
 if config_env() == :prod do
-  config :tower_honeybadger, api_key: System.get_env("HONEYBADGER_API_KEY")
+  config :tower_honeybadger,
+    api_key: System.get_env("HONEYBADGER_API_KEY"),
+    environment_name: System.get_env("DEPLOYMENT_ENV", to_string(config_env()))
 end
 ```
 
