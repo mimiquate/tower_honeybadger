@@ -20,7 +20,15 @@ def deps do
 end
 ```
 
-## Usage
+## Setup
+
+### Option A: Automated setup
+
+```sh
+$ mix tower_honeybadger.install
+```
+
+### Option B: Manual setup
 
 Tell `Tower` to inform `TowerHoneybadger` reporter about errors.
 
@@ -56,7 +64,7 @@ any plug call (including Phoenix), Oban job, async task or any other Elixir proc
 
 Some HTTP request data will automatically be included in the report if a `Plug.Conn` if available when handling the error.
 
-### Manual reporting
+## Manual reporting
 
 You can manually report errors just by informing `Tower` about any manually caught exceptions, throws or abnormal exits.
 
