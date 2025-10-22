@@ -57,17 +57,20 @@ if config_env() == :prod do
 end
 ```
 
+## Reporting
+
 That's it.
+There's no extra source code needed to get reports in Honeybadger UI.
 
-It will try report any errors (exceptions, throws or abnormal exits) within your application. That includes errors in
-any plug call (including Phoenix), Oban job, async task or any other Elixir process.
+Tower will automatically report any errors (exceptions, throws or abnormal exits) occurring in your application.
+That includes errors in any plug call (including Phoenix), Oban jobs, async task or any other Elixir process.
 
-Some HTTP request data will automatically be included in the report if a `Plug.Conn` if available when handling the error.
+Some HTTP request data will automatically be included in the report if a `Plug.Conn` if available when Tower handles
+the error, e.g. when an exception occurs in a web request.
 
-## Manual reporting
+### Manual reporting
 
 You can manually report errors just by informing `Tower` about any manually caught exceptions, throws or abnormal exits.
-
 
 ```elixir
 try do
