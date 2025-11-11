@@ -43,7 +43,7 @@ defmodule TowerHoneybadger.MixProject do
       {:plug, "~> 1.14"},
 
       # Optional
-      {:igniter, "~> 0.7", optional: true},
+      {:igniter, "~> 0.6", optional: true},
       # Only needed for Elixir < 1.18
       {:jason, "~> 1.4", optional: true},
 
